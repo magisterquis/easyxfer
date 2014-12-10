@@ -1,0 +1,5 @@
+  Default port in config file
+  Much better error messages
+  Print our own cert hashes
+  Make -max user-friendly
+  Print speed since last update
