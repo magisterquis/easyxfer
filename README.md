@@ -9,3 +9,6 @@ Install with:
 ```
 go get github.com/kd5pbo/easyxfer
 ```
+
+Please don't look at the source, unless you're teaching and want an antipattern
+(or want to learn how to get job security).
