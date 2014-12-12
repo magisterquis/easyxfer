@@ -5,3 +5,5 @@
   Print speed since last update
   Print a newline before logging after file xfer
   Work out how to not flock on Windows
+  Print 0s before extension, and don't add an extension if not necessary
+  Check if file is a file before listening assuming it is
