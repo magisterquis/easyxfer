@@ -598,13 +598,6 @@ func loadRC(fname string) error {
 		return fmt.Errorf("unable to open file: %v", err)
 	}
 	fd := int(f.Fd()) /* File descriptor */
-	/* Lock the file for writing (for if we don't have a keypair */
-	debug("Flocking %v (%v)", fd, fname)
-	if err := syscall.Flock(fd, syscall.LOCK_EX); nil != err {
-		return fmt.Errorf("unable to get exclusive lock: %v", err)
-	}
-	/* Unlock it before exit */
-	defer funlock(f, fname)
 
 	scanner := bufio.NewScanner(f)
 	/* Read lines from the file */
@@ -696,14 +689,5 @@ func verbose(f string, a ...interface{}) {
 func debug(f string, a ...interface{}) {
 	if *printDebug {
 		log.Printf(f, a...)
-	}
-}
-
-/* Unlock a flock'd file */
-func funlock(f *os.File, fname string) {
-	debug("FUnlocking %v (%v)", int(f.Fd()), fname)
-	if err := syscall.Flock(int(f.Fd()), syscall.LOCK_UN); nil != err {
-		log.Printf("Unable to release exclusive lock on %v: %v",
-			fname, err)
 	}
 }
