@@ -52,7 +52,6 @@ import (
 	"path"
 	"strconv"
 	"strings"
-	"syscall"
 )
 
 var (
@@ -485,13 +484,13 @@ PrepareOutput:
 	}
 	/* Try the given name first */
 	rxfile, err = os.OpenFile(rxfname,
-		os.O_CREATE|OS.O_APPEND|os.O_RDWR|os.O_EXCL, 0644)
+		os.O_CREATE|os.O_APPEND|os.O_RDWR|os.O_EXCL, 0644)
 	if nil != err {
 		log.Printf("Unable to create %v: %v", rxfname, err)
 	}
 	/* Try different filenames until we have a new one */
 	/* TODO: Unhardcode this */
-	for ext := 0; nil == rxfile && rxfile < 1000; ext++ {
+	for ext := 0; nil == rxfile && ext < 1000; ext++ {
 		/* Append a number to prevent extension-based attacks */
 		ofname := fmt.Sprintf("%v.%03v", rxfname, ext)
 		if _, err := os.Stat(ofname); os.IsNotExist(err) {
@@ -573,12 +572,16 @@ WaitForReady:
 	if "" != rxfname {
 		/* Receive the file */
 		rxspeed, err := recvFile(peer, rxfile, rxsize)
+		fmt.Printf("\n")
+
 		/* Tell the user how it went */
 		if nil != err {
 			log.Printf("Error receiving %v: %v", rxfile.Name(), err)
 		} else {
 			log.Printf("Received %v", rxspeed)
 		}
+	} else {
+		fmt.Printf("\n")
 	}
 
 	/* If we're also sending, print a message about that, too */
@@ -610,7 +613,6 @@ func loadRC(fname string) error {
 	if err != nil {
 		return fmt.Errorf("unable to open file: %v", err)
 	}
-	fd := int(f.Fd()) /* File descriptor */
 
 	scanner := bufio.NewScanner(f)
 	/* Read lines from the file */
