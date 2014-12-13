@@ -249,6 +249,13 @@ ListenDefault:
 			flag.Arg(0))
 		return -8
 	}
+	/* If we've failed, and there's an argument, make sure it's an
+	openable file and if so, listen on the default port */
+	if _, err := os.Stat(flag.Arg(0)); nil != err {
+		log.Printf("%v is not an address or a file.  Giving up.",
+			flag.Arg(0))
+		return -27
+	}
 	if p, err := accept(tcpv, net.JoinHostPort("", strconv.Itoa(port)),
 		conf); nil != err {
 		log.Printf("Unable to listen and accept connection on "+
