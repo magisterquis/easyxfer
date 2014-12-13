@@ -227,14 +227,14 @@ func xferBytes(dst io.Writer, src io.Reader, size int,
 		if 0 == iter%10 {
 			/* If we know the size */
 			if -1 != size {
-				fmt.Fprintf(os.Stderr, "(%c-%v/%v-%.1f%%-%v)",
-					pc,
+				fmt.Fprintf(os.Stderr,
+					"(%c-%v/%v-%.1f%%-%v)\n", pc,
 					bytefmt.ByteSize(uint64(nsent)),
 					sizestr,
 					float64(nsent)/float64(size)*100,
 					speed(start, nsent))
 			} else { /* Unknown size */
-				fmt.Fprintf(os.Stderr, "(%c-%v-%v)",
+				fmt.Fprintf(os.Stderr, "(%c-%v-%v)\n",
 					pc, nsent, speed(start, nsent))
 			}
 		} else {
