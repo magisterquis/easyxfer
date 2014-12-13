@@ -483,20 +483,33 @@ PrepareOutput:
 	if !terminal.IsTerminal(int(os.Stdout.Fd())) {
 		rxfile = os.Stdout
 	}
+	/* Try the given name first */
+	rxfile, err = os.OpenFile(rxfname,
+		os.O_CREATE|OS.O_APPEND|os.O_RDWR|os.O_EXCL, 0644)
+	if nil != err {
+		log.Printf("Unable to create %v: %v", rxfname, err)
+	}
 	/* Try different filenames until we have a new one */
-	for ext := 0; nil == rxfile; ext++ {
+	/* TODO: Unhardcode this */
+	for ext := 0; nil == rxfile && rxfile < 1000; ext++ {
 		/* Append a number to prevent extension-based attacks */
-		ofname := fmt.Sprintf("%v.%3v", rxfname, ext)
+		ofname := fmt.Sprintf("%v.%03v", rxfname, ext)
 		if _, err := os.Stat(ofname); os.IsNotExist(err) {
 			/* Create the file */
 			var err error
 			rxfile, err = os.OpenFile(ofname,
-				os.O_CREATE|os.O_APPEND|os.O_RDWR, 0644)
+				os.O_CREATE|os.O_APPEND|os.O_RDWR|os.O_EXCL,
+				0644)
 			if nil != err {
 				log.Printf("Unable to create %v: %v", err)
 				return -15
 			}
 		}
+	}
+	/* If we've still failed, give up */
+	if nil == rxfile {
+		log.Printf("Gave up after trying 1000 different names")
+		return -26
 	}
 
 WaitForReady:
