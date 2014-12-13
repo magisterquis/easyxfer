@@ -98,7 +98,7 @@ Examples:
 	}
 
 	/* Command-line flags */
-	max := flag.Int("m", 1024*1024, "Max receive file size in bytes")
+	max := flag.Int("m", 1024*1024*1024, "Max receive file size in bytes")
 	printVerbose = flag.Bool("v", false, "Print informational output")
 	printDebug = flag.Bool("d", false, "Print more output than -v.  "+
 		"Implies -v")
